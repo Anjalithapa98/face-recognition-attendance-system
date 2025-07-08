@@ -10,25 +10,20 @@ face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 def augment_face(face):
     augmented = []
 
-    # Original
     augmented.append(face)
 
-    # Flip
     augmented.append(cv2.flip(face, 1))
 
-    # Rotate small angles
     for angle in [-10, 10, -20, 20]:
         h, w = face.shape
         M = cv2.getRotationMatrix2D((w//2, h//2), angle, 1)
         rotated = cv2.warpAffine(face, M, (w, h))
         augmented.append(rotated)
 
-    # Adjust brightness
     for alpha in [0.8, 1.2, 1.4]:
         bright = cv2.convertScaleAbs(face, alpha=alpha, beta=0)
         augmented.append(bright)
 
-    # Slight shifts
     for tx in [-10, 10]:
         M_shift = np.float32([[1, 0, tx], [0, 1, 0]])
         shifted = cv2.warpAffine(face, M_shift, (w, h))

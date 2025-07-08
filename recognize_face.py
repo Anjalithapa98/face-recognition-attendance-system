@@ -5,29 +5,18 @@ import pickle
 from datetime import datetime
 import csv
 
-# ===================================
-# Load trained model
-# ===================================
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('trainer/trainer.yml')
 
-# Load Haar Cascade
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-# Load label map
 with open('trainer/label_map.pickle', 'rb') as f:
     label_map = pickle.load(f)
 
-# Make ordered list: index = ID, value = name
-# Ensure IDs are sorted so index matches!
 names = [label_map[i] for i in sorted(label_map.keys())]
 print(f"[INFO] Loaded labels (ID -> Name):")
 for i, name in enumerate(names):
     print(f"  {i}: {name}")
-
-# ===================================
-# Attendance CSV setup
-# ===================================
 if not os.path.exists('attendance'):
     os.makedirs('attendance')
 
@@ -50,9 +39,6 @@ def mark_attendance(name):
         writer.writerow([name, timestamp])
         print(f"[LOGGED] {name} at {timestamp}")
 
-# ===================================
-# Start webcam
-# ===================================
 cam = cv2.VideoCapture(0)
 print("\n[INFO] Starting Face Recognition. Press 'q' to quit.")
 
